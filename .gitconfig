@@ -1,0 +1,89 @@
+[user]
+	name = 
+	email = 
+    editor = vim
+    #signingkey = ???
+    whitespace = trailing-space,space-before-tab,indent-with-non-tab,cr-at-eol
+
+[core]
+#   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+#   -x4 = tabs are 4 spaces -r wrap long lines
+	;pager = less -x5,9 -r
+
+[push]
+    default = current
+
+[diff]
+	tool = vimdiff
+    renames = true
+
+#[merge]
+#    tool = vimdiff
+
+[man]
+    viewer = man
+
+[help]
+    format = man
+
+[color]
+    ui = true
+    branch = auto
+    diff = auto
+    status = always
+
+[color "branch"]
+    current = white bold
+    local = yellow
+    remote = red
+    whitespace = red reverse
+
+[color "diff"]
+    meta = white bold
+    frag = blue bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    updated = green
+    changed = yellow bold
+    untracked = red bold
+    branch = cyan
+
+[status]
+    submodulesummary = true
+
+[alias]
+    st = status
+    co = checkout
+    ci = commit
+    br = branch
+	dw = diff --color-words
+    dc = diff --cached
+	#lg = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
+	lg = log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit --date=relative
+    ls = ls-files
+
+    # Show files ignored by git:
+    ign = ls-files -o -i --exclude-standard
+
+    #lg2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    #rlog = log --pretty=format:\"%h %Cblue%cr%Creset %cn %Cgreen%s%Creset\"
+    #head = !"git log -n1"
+    #lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
+    #changes=diff --name-status -r
+    #st = status
+    #br = branch
+    #
+    #wdiff = diff --color-words
+    #wshow = show --color-words
+
+    # make a tar backup of the dir
+    panic = !tar cvf ../git_panic.tar .
+    # wip quicksaves?
+    wip = !"git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
+    unwip = !"git log -n 1 | grep -q -c wip && git reset HEAD^1"
+    rb = !"git wip;git rebase -i origin/master;git unwip"
+    pr = !"git fetch;git wip;git rebase --stat origin;git unwip;git heads"
