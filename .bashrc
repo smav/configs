@@ -217,7 +217,7 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 . ~/configs/functions.sh  || printf "Can't source ~/configs/functions.sh\n"
 
 # Host specific config - CREATE/USE THIS for local config, keep out of git
-[[ -f ~/.bashrc.$HOSTNAME ]] && . "~/.bashrc.$HOSTNAME"
+[[ -f ~/.bashrc.$HOSTNAME ]] && . ~/.bashrc.$HOSTNAME
 
 
 ##############################################################################
