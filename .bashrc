@@ -159,7 +159,7 @@ shopt -s histappend                # Append rather than overwrite history on exi
 #
 # 1. Individual shell historys that are removed on shell exit
 export HISTFILE="~/.bash_history.$$"  # Set a specific file to store history
-trap "rm ${HISTFILE}" EXIT            # remove the file on exit
+trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
 # to save history just dump it before exit : history > a_file
 #
 # Or 
@@ -229,19 +229,25 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 #
 # Store ssh-agent output/config somewhere
 AGENT_ENV="~/.ssh/env"
+
 function start_agent {
     # Start the agent and store it's details
     /usr/bin/ssh-agent | sed '/^echo/d' > "${AGENT_ENV}" && chmod 600 "${AGENT_ENV}"
-    # Source it/make it active
+    # Source it/make it active (ie nuke any old config)
     . "${AGENT_ENV}" > /dev/null
     # Add keys, this will throw up password prompts if the keys have them
     /usr/bin/ssh-add;
 }
+
 # Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
 if [ -n "${SSH_AUTH_SOCK}" ]; then
+    # sudo can inherit other users auth_sock so.. check for this 
+    # (this check may be debian specific)
+    if [ $(echo $SSH_AUTH_SOCK | cut -d/ -f4) == "$EUID" ]; then
         # The socket exists, but if the PID isn't running then it may be old
         # config, so start a new one/nuke it
         ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
+    fi
 else
     # No agent running, is there a config to use?
     if [ -f "${AGENT_ENV}" ]; then
@@ -250,7 +256,10 @@ else
         ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
     else
         # No agent running and no config to use, start the agent
-        start_agent
+        # (unless user is root, more caution is required for root)
+        if [ "$EUID" -ne 0 ]; then 
+            start_agent
+        fi
     fi
 fi
 
