@@ -107,7 +107,6 @@ alias makecert='openssl req -new -x509 -keyout server.pem -out server.pem -days 
 #alias mlogs='multitail -cS syslog /var/log/syslog -cS liniptfw /var/log/fw.log'
 
 # Kali
-alias kalivm='virt-viewer --connect qemu:///system 1 &'
 alias vpn='openvpn --config ~/htb/htb.ovpn'
 alias pyhttp='python -m SimpleHTTPServer 8000'
 
