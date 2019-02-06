@@ -40,11 +40,6 @@ done
 # On login create a tmux session which we work from
 case $- in
     *i*) # interactive shell
-    	# Un-needed? I set this in the .tmux.conf now
-        #if [[ ${TERM} == 'screen' ]]; then
-		#	# setup color tmux
-        #    export TERM='screen-256color'
-        #fi
 		# Work from Main tmux session, or create one
         case ${HOSTNAME} in
             lupus)

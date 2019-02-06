@@ -16,7 +16,7 @@
 # We also source config from ~/.bashrc.$HOSTNAME if it exists, 
 # CREATE IT to store local config/aliases (keep it out of git).
 #
-# e.g touch .bashrc.kali then add local config there
+# e.g $ touch .bashrc.kali # then add local config there
 #
 #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -42,7 +42,7 @@
 
 # If not running interactively bail out. 
 [ -z "$PS1" ] && return
-# This should fix the above 'generate no output' warning above about scp etc
+# Sanity check to avoid the 'generate no output' warning above about scp etc
 
 ###############################################################################
 # Bash configuration options
@@ -144,7 +144,7 @@ esac
 
 
 ###############################################################################
-# History
+# History FIXME
 
 export HISTSIZE=10000              # Num. of commands in history stack in memory
 export HISTFILESIZE=10000
@@ -223,12 +223,12 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 ##############################################################################
 # SSH agent - re-use any existing agent for tmux/bash convenience
 # 
-# !! Could be considered a security risk, remove this section on live boxes !!
+# ! Could be considered a security risk, remove this section on live boxes !
 
 # Re-use exist ssh-agent
 #
 # Store ssh-agent output/config somewhere
-AGENT_ENV="~/.ssh/env"
+AGENT_ENV="~/.ssh/.env"
 
 function start_agent {
     # Start the agent and store it's details
@@ -283,19 +283,6 @@ fi
 
 # Setprompt from ~/configs/functions.sh
 setprompt
-
-## If Kali and the vpn is up, set a global var VPNIP - done in .tmux.conf now
-#HOST=`hostname -s`
-#case ${HOST} in
-#    kali)
-#        # Attempt to get tun0 ip
-#        VPNIP=$(ip addr show tun0 2>0| grep 'inet '| sed 's/\// /' | awk '{ print $2 }')
-#        # get IP of TUN0
-#        if [ "${VPNIP:0:6}"x == "10.10."x ]; then
-#            export VPNIP
-#        fi
-#        ;;
-#esac
 
 ################# End of ~/.bashrc (~/configs/.bashrc)  ######################
 ##############################################################################
