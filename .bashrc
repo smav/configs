@@ -4,28 +4,20 @@
 #
 ###############################################################################
 #
-#  This file is sourced by .bash_profile, plus interactive bash (sub)shells.
+# This file is sourced by .bash_profile, plus interactive bash (sub)shells.
 #
-#  The actual ~/.bashrc should be a link to a git local repository,
-#  it depends on other files in the repository.
-#  i.e.             ~/.bashrc       ---> ~/configs/.bashrc
-#                   ~/.bash_profile ---> ~/configs/.bash_profile
-#                                   ---> ~/configs/common_aliases.sh
-#                                   ---> ~/configs/functions.sh
-#
-# We also source config from ~/.bashrc.$HOSTNAME if it exists, 
-# CREATE IT to store local config/aliases (keep it out of git).
+# We source config from ~/.bashrc.$HOSTNAME if it exists, 
+# CREATE IT to store local config/aliases (to keep it out of git confs).
 #
 # e.g $ touch .bashrc.kali # then add local config there
 #
 #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#  NB this file should *GENERATE NO OUTPUT* or it will break scp etc.
-#               (that goes for any file it sources!)
+#  N.B. this file should *GENERATE NO OUTPUT* or it will break scp etc.
+#                 (that goes for any file it sources)
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
-#
-# Advanced bash tips: http://samrowe.com/wordpress/advancing-in-the-bash-shell/
+# bash tips: http://samrowe.com/wordpress/advancing-in-the-bash-shell/
 #
 ###############################################################################
 
@@ -158,23 +150,13 @@ export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 # want to do it, even if it does exist 
 [ -r /etc/bash_completion ] && source /etc/bash_completion
 
-# Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[[ -e "~/.ssh/config" ]] \
-  && complete \
-       -o "default" \
-       -o "nospace" \
-       -W "$(grep "^Host" "~/.ssh/config" \
-           | grep -v "[?*]" \
-           | cut -d " " -f2)" \
-       scp sftp ssh
-# Store remote host config in .ssh/config it plays nicer with other commands
-
 
 ###############################################################################
 # Colors
 
 # Set ls colors
 [ -f ~/.dir_colors ] && eval $(dircolors -b ~/.dir_colors) || eval $(dircolors -b)
+
 # Make grep search highlight yellow instead of red
 export GREP_COLOR="1;33"
 

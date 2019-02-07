@@ -1,7 +1,7 @@
 [user]
 	name = 
 	email = 
-    editor = vim
+    #editor = vim
     #signingkey = ???
     whitespace = trailing-space,space-before-tab,indent-with-non-tab,cr-at-eol
 
@@ -62,24 +62,13 @@
     br = branch
 	dw = diff --color-words
     dc = diff --cached
-	#lg = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
 	lg = log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+	lg2 = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
     lol = log --graph --decorate --pretty=oneline --abbrev-commit --date=relative
     ls = ls-files
 
     # Show files ignored by git:
     ign = ls-files -o -i --exclude-standard
-
-    #lg2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-    #rlog = log --pretty=format:\"%h %Cblue%cr%Creset %cn %Cgreen%s%Creset\"
-    #head = !"git log -n1"
-    #lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
-    #changes=diff --name-status -r
-    #st = status
-    #br = branch
-    #
-    #wdiff = diff --color-words
-    #wshow = show --color-words
 
     # make a tar backup of the dir
     panic = !tar cvf ../git_panic.tar .
