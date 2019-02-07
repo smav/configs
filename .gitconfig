@@ -54,6 +54,7 @@
 [status]
     submodulesummary = true
 
+# Some example aliases/shortcuts
 [alias]
     st = status
     co = checkout

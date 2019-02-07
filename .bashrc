@@ -27,13 +27,6 @@
 #
 # Advanced bash tips: http://samrowe.com/wordpress/advancing-in-the-bash-shell/
 #
-# cd - 			# cd to previous dir
-# !!			# run last command
-# !$   			# last argument of last command
-#
-# cat a b | sort | uniq > c        # c is a union b
-# cat a b | sort | uniq -d > c     # c is a intersect b
-# cat a b b | sort | uniq -u > c   # c is set difference a - b
 ###############################################################################
 
 
@@ -70,11 +63,11 @@ unset MAILCHECK                    # dont want shell to warn of incoming mail
 
 # Bash VI mode, use VI keybinds for shell movement, standard keybindings are 
 # EMACS-like, ie ctrl-a ctrl-e
-set -o vi
+#set -o vi
 
 
 ###############################################################################
-# PATH, MANPATH & Host specific vars
+# PATH / MANPATH
 
 BASE_PATH="/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin"
 PATH="~/configs/bin:${BASE_PATH}"
@@ -144,7 +137,7 @@ esac
 
 
 ###############################################################################
-# History FIXME
+# History
 
 export HISTSIZE=10000              # Num. of commands in history stack in memory
 export HISTFILESIZE=10000
@@ -153,22 +146,7 @@ export HISTCONTROL=ignoreboth      # bash < 3, omit dups & lines starting with s
 export HISTIGNORE='&:[ ]*:ll:ls:exit' # bash >= 3, omit dups & lines starting with space, and common cmds
 export HISTTIMEFORMAT="%F %T "     # set this to get timings in history !
 shopt -s histappend                # Append rather than overwrite history on exit
-
-# There are 2 options for shell history, per session/shell or across all sessions
-# uncomment only one of the following options (hence comment the other!)
-#
-# 1. Individual shell historys that are removed on shell exit
-export HISTFILE="~/.bash_history.$$"  # Set a specific file to store history
-trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
-# to save history just dump it before exit : history > a_file
-#
-# Or 
-# 
-# 2. Shared history across all shell/tmux sessions, stored in .bash_history
-# export HISTFILE="~/.bash_history"  # Set a specific file to store history
-
 # After each command, save and reload history
-#export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE; $PROMPT_COMMAND"
 export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 
 
@@ -214,75 +192,12 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 # Source the rest of our config
 
 . ~/configs/common_aliases.sh || printf "Can't source ~/configs/common_aliases.sh\n"
-. ~/configs/functions.sh  || printf "Can't source ~/configs/functions.sh\n"
+. ~/configs/functions.sh  && setprompt || printf "Can't source ~/configs/functions.sh\n"
 
 # Host specific config - CREATE/USE THIS for local config, keep out of git
 [[ -f ~/.bashrc.$HOSTNAME ]] && . ~/.bashrc.$HOSTNAME
 
 
 ##############################################################################
-# SSH agent - re-use any existing agent for tmux/bash convenience
-# 
-# ! Could be considered a security risk, remove this section on live boxes !
-
-# Re-use exist ssh-agent
-#
-# Store ssh-agent output/config somewhere
-AGENT_ENV="~/.ssh/.env"
-
-function start_agent {
-    # Start the agent and store it's details
-    /usr/bin/ssh-agent | sed '/^echo/d' > "${AGENT_ENV}" && chmod 600 "${AGENT_ENV}"
-    # Source it/make it active (ie nuke any old config)
-    . "${AGENT_ENV}" > /dev/null
-    # Add keys, this will throw up password prompts if the keys have them
-    /usr/bin/ssh-add;
-}
-
-# Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
-if [ -n "${SSH_AUTH_SOCK}" ]; then
-    # sudo can inherit other users auth_sock so.. check for this 
-    # (this check may be debian specific)
-    if [ $(echo $SSH_AUTH_SOCK | cut -d/ -f4) == "$EUID" ]; then
-        # The socket exists, but if the PID isn't running then it may be old
-        # config, so start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
-    fi
-else
-    # No agent running, is there a config to use?
-    if [ -f "${AGENT_ENV}" ]; then
-        . "${AGENT_ENV}" > /dev/null
-        # Is this a current agent, ie still running? If not, start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
-    else
-        # No agent running and no config to use, start the agent
-        # (unless user is root, more caution is required for root)
-        if [ "$EUID" -ne 0 ]; then 
-            start_agent
-        fi
-    fi
-fi
-
-# gnupg for pass?
-# start gnupg agent or read the details if its started
-#if [ -f "~/.gpg-agent-info" ]; then
-#if [ -x /usr/bin/gpg-agent ]; then
-#   if /usr/bin/pgrep -u "${USER}" gpg-agent >/dev/null 2>&1; then
-#       # gpgp-agent running source the file
-#       . "~/.gpg-agent-info"
-#       export GPG_AGENT_INFO
-#       export SSH_AUTH_SOCK
-#   else
-#       # if gpg-agent not already running start it and write a file
-#       eval $(gpg-agent --daemon --enable-ssh-support --write-env-file "~/.gpg-agent-info")
-#   fi
-#fi
-
-##############################################################################
-# End
-
-# Setprompt from ~/configs/functions.sh
-setprompt
-
 ################# End of ~/.bashrc (~/configs/.bashrc)  ######################
 ##############################################################################
