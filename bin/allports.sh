@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# nmap scan all ports in stages, written for HTB
+# nmap scan all ports in stages, write output to local folder
 
-if [ "$#" -lt 1 ] ; then                                                                                                                                                                         
+if [ "$#" -lt 1 ] ; then
 	echo "[!] Error - usage: $0 <ip_address>"
 	exit 1
 else 

@@ -1,22 +1,13 @@
 Configs
 =======
 
-Configuration files for vim, tmux, bash, etc.
+Barebones configuration files for tmux, bash, and git
 
 > cd  
-> git clone https://github.com/smav/configs configs  
-> git clone https://github.com/smav/.vim .vim  
+> git clone https://github.com/smav/configs --branch simple
 > ~/configs/bin/gitlinks.sh                  # start using the configs  
 
 The gitlinks script will backup and replace(with links) the current configs.  
 
-There are some general reference tips available:  
-* bashtips
-* sshtips
-* vimtips
-* tips
-
-bashtips, sshtips, debtips, and vimtips are all due to be rolled into the more 
-featureful tips command at some point
-
 See https://github.com/smav/.vim for vim setup instructions.
+> git clone https://github.com/smav/.vim
