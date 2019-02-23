@@ -73,7 +73,6 @@ alias mountt='mount | column -t'    # nice output for mount command
 alias disks='echo "╓───── m o u n t . p o i n t s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -a; echo ""; echo "╓───── d i s k . u s a g e"; echo "╙────────────────────────────────────── ─ ─ "; df -h;'
 
 # Net
-alias ports='netstat tulpn'
 alias pubip='curl canhazip.com'
 alias header='curl -I' # get web server headers
 alias headerc='curl -I --compress' # does webserver support gzip/mod_deflate

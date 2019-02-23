@@ -158,8 +158,8 @@ shopt -s histappend                # Append rather than overwrite history on exi
 # uncomment only one of the following options (hence comment the other!)
 #
 # 1. Individual shell historys that are removed on shell exit
-export HISTFILE="~/.bash_history.$$"  # Set a specific file to store history
-trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
+#export HISTFILE="~/.bash_history.$$"  # Set a specific file to store history
+#trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
 # to save history just dump it before exit : history > a_file
 #
 # Or 
@@ -168,6 +168,7 @@ trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file 
 # export HISTFILE="~/.bash_history"  # Set a specific file to store history
 
 # After each command, save and reload history
+export HISTFILE="~/.bash_history"  # Set a specific file to store history
 #export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE; $PROMPT_COMMAND"
 export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 

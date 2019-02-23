@@ -156,12 +156,12 @@ function setprompt        # setup a nicer prompt, color based on hostname
             UCOLOR=${YELLOW}
             LCOLOR=${YELLOW}
             ;;
-        vm*|*vm|diskless|debian*|centos*)
+        vm*|*vm|diskless|net|web)
             COLOR=${GREEN}
             UCOLOR=${GREEN}
             LCOLOR=${LGREEN}
             ;;
-        bigjessie)
+        bigjessie|node*|pve*)
             COLOR=${RED}
             UCOLOR=${RED}
             LCOLOR=${LRED}
