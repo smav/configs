@@ -13,23 +13,23 @@
 #                                   ---> ~/configs/common_aliases.sh
 #                                   ---> ~/configs/functions.sh
 #
-# We also source config from ~/.bashrc.$HOSTNAME if it exists, 
+# We also source config from ~/.bashrc.$HOSTNAME if it exists,
 # CREATE IT to store local config/aliases (keep it out of git).
 #
 # e.g $ touch .bashrc.kali # then add local config there
 #
-#
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# ----
+# 
 #  NB this file should *GENERATE NO OUTPUT* or it will break scp etc.
 #               (that goes for any file it sources!)
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
+# ----
 #
 # Advanced bash tips: http://samrowe.com/wordpress/advancing-in-the-bash-shell/
 #
-# cd - 			# cd to previous dir
-# !!			# run last command
-# !$   			# last argument of last command
+#     cd - 			# cd to previous dir
+#     !!			# run last command
+#     !$   			# last argument of last command
 #
 # cat a b | sort | uniq > c        # c is a union b
 # cat a b | sort | uniq -d > c     # c is a intersect b
@@ -40,7 +40,7 @@
 ###############################################################################
 # Sanity check
 
-# If not running interactively bail out. 
+# If not running interactively bail out.
 [ -z "$PS1" ] && return
 # Sanity check to avoid the 'generate no output' warning above about scp etc
 
@@ -68,7 +68,7 @@ ulimit -S -c 0 > /dev/null 2>&1    # No core files by default. See /etc/security
 shopt -u mailwarn
 unset MAILCHECK                    # dont want shell to warn of incoming mail
 
-# Bash VI mode, use VI keybinds for shell movement, standard keybindings are 
+# Bash VI mode, use VI keybinds for shell movement, standard keybindings are
 # EMACS-like, ie ctrl-a ctrl-e
 set -o vi
 
@@ -77,7 +77,7 @@ set -o vi
 # PATH, MANPATH & Host specific vars
 
 BASE_PATH="/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin"
-PATH="~/configs/bin:${BASE_PATH}"
+PATH="${HOME}/configs/bin:${BASE_PATH}"
 export PATH
 #export CDPATH='.:..:../..:~/:/etc' # Similar to $PATH, but for use by 'cd'
 # Note that the '.' in $CDPATH is needed so that cd will work under POSIX mode
@@ -88,11 +88,11 @@ export PATH
 
 
 ###############################################################################
-# Default bit-mask 
+# Default bit-mask
 
 umask 0022
 # Stricter perms for root
-if [ $(whoami | grep root) ] ; then
+if "whoami | grep -q root" ; then
     umask 0077
 fi
 
@@ -101,20 +101,20 @@ fi
 # Editor/pager
 
 # Use Vim if available, vi if not
-VIM_PATH=$(which vim)
+VIM_PATH=$(commmand -v vim)
 # -n tests for string not empty, which is the default, but lets be explicit
 if [ -n "${VIM_PATH}" ]; then
     # set vi alias
     alias vi="${VIM_PATH}"
 else
-	VIM_PATH=$(which vi)
+	VIM_PATH="$(command -v vi)"
 fi
 EDITOR=${VIM_PATH}
 VISUAL=${VIM_PATH}
 export EDITOR VISUAL
 
 # Pager - less or more
-PAGER=$(/usr/bin/which less)
+PAGER=$(command -v less)
 if [ -n "${PAGER}" ]; then
     #Less - https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
     export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
@@ -127,7 +127,7 @@ if [ -n "${PAGER}" ]; then
     #export LC_MESSAGES="en_GB.UTF-8"
     #export LESSCHARSET="en_GB.UTF-8"
 else
-    PAGER=$(/usr/bin/which more)
+    PAGER=$(command -v more)
 fi
 export PAGER
 
@@ -162,13 +162,13 @@ shopt -s histappend                # Append rather than overwrite history on exi
 #trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
 # to save history just dump it before exit : history > a_file
 #
-# Or 
-# 
+# Or
+#
 # 2. Shared history across all shell/tmux sessions, stored in .bash_history
 # export HISTFILE="~/.bash_history"  # Set a specific file to store history
 
 # After each command, save and reload history
-export HISTFILE="~/.bash_history"  # Set a specific file to store history
+export HISTFILE="${HOME}/.bash_history"  # Set a specific file to store history
 #export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE; $PROMPT_COMMAND"
 export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 
@@ -178,15 +178,15 @@ export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 
 # Import bash tab completion settings, if they exist in the default location.
 # This can take a second or two on a slow system, so you may not always
-# want to do it, even if it does exist 
+# want to do it, even if it does exist
 [ -r /etc/bash_completion ] && source /etc/bash_completion
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[[ -e "~/.ssh/config" ]] \
+[[ -e "${HOME}/.ssh/config" ]] \
   && complete \
        -o "default" \
        -o "nospace" \
-       -W "$(grep "^Host" "~/.ssh/config" \
+       -W "$(grep "^Host" "${HOME}/.ssh/config" \
            | grep -v "[?*]" \
            | cut -d " " -f2)" \
        scp sftp ssh
@@ -197,9 +197,14 @@ export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 # Colors
 
 # Set ls colors
-[ -f ~/.dir_colors ] && eval $(dircolors -b ~/.dir_colors) || eval $(dircolors -b)
+if [ -f ~/.dir_colors ]; then
+    eval "$(dircolors -b ~/.dir_colors)"
+else
+    eval "$(dircolors -b)"
+fi
 # Make grep search highlight yellow instead of red
 export GREP_COLOR="1;33"
+export GREP_OPTIONS='--color=auto'
 
 # man/less colors
 export LESS_TERMCAP_mb=$'\E[01;37m'    # begin blinking
@@ -214,22 +219,24 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 ##############################################################################
 # Source the rest of our config
 
-. ~/configs/common_aliases.sh || printf "Can't source ~/configs/common_aliases.sh\n"
-. ~/configs/functions.sh  || printf "Can't source ~/configs/functions.sh\n"
+. "${HOME}/configs/common_aliases.sh" || \
+    printf "Can't source ~/configs/common_aliases.sh\n"
+. "${HOME}/configs/functions.sh"  || \
+    printf "Can't source ~/configs/functions.sh\n"
 
 # Host specific config - CREATE/USE THIS for local config, keep out of git
-[[ -f ~/.bashrc.$HOSTNAME ]] && . ~/.bashrc.$HOSTNAME
+[[ -f "${HOME}/.bashrc.${HOSTNAME}" ]] && . "${HOME}/.bashrc.${HOSTNAME}"
 
 
 ##############################################################################
 # SSH agent - re-use any existing agent for tmux/bash convenience
-# 
+#
 # ! Could be considered a security risk, remove this section on live boxes !
 
 # Re-use exist ssh-agent
 #
 # Store ssh-agent output/config somewhere
-AGENT_ENV="~/.ssh/.env"
+AGENT_ENV="${HOME}/.ssh/.env"
 
 function start_agent {
     # Start the agent and store it's details
@@ -242,9 +249,9 @@ function start_agent {
 
 # Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
 if [ -n "${SSH_AUTH_SOCK}" ]; then
-    # sudo can inherit other users auth_sock so.. check for this 
+    # sudo can inherit other users auth_sock so.. check for this
     # (this check may be debian specific)
-    if [ $(echo $SSH_AUTH_SOCK | cut -d/ -f4) == "$EUID" ]; then
+    if [ $(echo "${SSH_AUTH_SOCK}" | cut -d/ -f4) == "${EUID}" ]; then
         # The socket exists, but if the PID isn't running then it may be old
         # config, so start a new one/nuke it
         ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
@@ -258,7 +265,7 @@ else
     else
         # No agent running and no config to use, start the agent
         # (unless user is root, more caution is required for root)
-        if [ "$EUID" -ne 0 ]; then 
+        if [ "${EUID}" -ne 0 ]; then
             start_agent
         fi
     fi
