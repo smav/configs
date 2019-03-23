@@ -92,7 +92,7 @@ export PATH
 
 umask 0022
 # Stricter perms for root
-if "whoami | grep -q root" ; then
+if $(whoami | grep -q root) ; then
     umask 0077
 fi
 
@@ -204,7 +204,6 @@ else
 fi
 # Make grep search highlight yellow instead of red
 export GREP_COLOR="1;33"
-export GREP_OPTIONS='--color=auto'
 
 # man/less colors
 export LESS_TERMCAP_mb=$'\E[01;37m'    # begin blinking
