@@ -101,7 +101,7 @@ fi
 # Editor/pager
 
 # Use Vim if available, vi if not
-VIM_PATH=$(commmand -v vim)
+VIM_PATH=$(command -v vim)
 # -n tests for string not empty, which is the default, but lets be explicit
 if [ -n "${VIM_PATH}" ]; then
     # set vi alias
