@@ -246,26 +246,28 @@ function start_agent {
     /usr/bin/ssh-add;
 }
 
-# Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
-if [ -n "${SSH_AUTH_SOCK}" ]; then
-    # sudo can inherit other users auth_sock so.. check for this
-    # (this check may be debian specific)
-    if [ $(echo "${SSH_AUTH_SOCK}" | cut -d/ -f4) == "${EUID}" ]; then
-        # The socket exists, but if the PID isn't running then it may be old
-        # config, so start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
-    fi
-else
-    # No agent running, is there a config to use?
-    if [ -f "${AGENT_ENV}" ]; then
-        . "${AGENT_ENV}" > /dev/null
-        # Is this a current agent, ie still running? If not, start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
+if [ -f "${AGENT_ENV}" ]; then
+    # Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
+    if [ -n "${SSH_AUTH_SOCK}" ]; then
+        # sudo can inherit other users auth_sock so.. check for this
+        # (this check may be debian specific)
+        if [ $(echo "${SSH_AUTH_SOCK}" | cut -d/ -f4) == "${EUID}" ]; then
+            # The socket exists, but if the PID isn't running then it may be old
+            # config, so start a new one/nuke it
+            ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
+        fi
     else
-        # No agent running and no config to use, start the agent
-        # (unless user is root, more caution is required for root)
-        if [ "${EUID}" -ne 0 ]; then
-            start_agent
+        # No agent running, is there a config to use?
+        if [ -f "${AGENT_ENV}" ]; then
+            . "${AGENT_ENV}" > /dev/null
+            # Is this a current agent, ie still running? If not, start a new one/nuke it
+            ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
+        else
+            # No agent running and no config to use, start the agent
+            # (unless user is root, more caution is required for root)
+            if [ "${EUID}" -ne 0 ]; then
+                start_agent
+            fi
         fi
     fi
 fi
