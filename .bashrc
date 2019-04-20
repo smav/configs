@@ -6,11 +6,15 @@
 #
 # This file is sourced by .bash_profile, plus interactive bash (sub)shells.
 #
-# We source config from ~/.bashrc.$HOSTNAME if it exists, 
-# CREATE IT to store local config/aliases (to keep it out of git confs).
+#  The actual ~/.bashrc should be a link to a git local repository,
+#  it depends on other files in the repository.
+#  i.e.             ~/.bashrc       ---> ~/configs/.bashrc
+#                   ~/.bash_profile ---> ~/configs/.bash_profile
+#                                   ---> ~/configs/common_aliases.sh
+#                                   ---> ~/configs/functions.sh
 #
-# e.g $ touch .bashrc.kali # then add local config there
-#
+# We also source config from ~/.bashrc.local if it exists,
+# CREATE IT to store local config/aliases (keep it out of git).
 #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #  N.B. this file should *GENERATE NO OUTPUT* or it will break scp etc.
@@ -53,16 +57,16 @@ ulimit -S -c 0 > /dev/null 2>&1    # No core files by default. See /etc/security
 shopt -u mailwarn
 unset MAILCHECK                    # dont want shell to warn of incoming mail
 
-# Bash VI mode, use VI keybinds for shell movement, standard keybindings are 
-# EMACS-like, ie ctrl-a ctrl-e
+# Bash VI mode, use VI keybinds for shell movement,
+# the standard keybindings are EMACS-like, ie ctrl-a ctrl-e
 #set -o vi
 
 
 ###############################################################################
-# PATH / MANPATH
+# PATH, MANPATH & Host specific vars
 
 BASE_PATH="/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin"
-PATH="~/configs/bin:${BASE_PATH}"
+PATH="${HOME}/configs/bin:${BASE_PATH}"
 export PATH
 #export CDPATH='.:..:../..:~/:/etc' # Similar to $PATH, but for use by 'cd'
 # Note that the '.' in $CDPATH is needed so that cd will work under POSIX mode
@@ -74,10 +78,9 @@ export PATH
 
 ###############################################################################
 # Default bit-mask 
-
 umask 0022
 # Stricter perms for root
-if [ $(whoami | grep root) ] ; then
+if [ "${USER}" == "root" ] ; then
     umask 0077
 fi
 
@@ -86,33 +89,33 @@ fi
 # Editor/pager
 
 # Use Vim if available, vi if not
-VIM_PATH=$(which vim)
+VIM_PATH=$(command -v vim)
 # -n tests for string not empty, which is the default, but lets be explicit
 if [ -n "${VIM_PATH}" ]; then
     # set vi alias
     alias vi="${VIM_PATH}"
 else
-	VIM_PATH=$(which vi)
+	VIM_PATH="$(command -v vi)"
 fi
 EDITOR=${VIM_PATH}
 VISUAL=${VIM_PATH}
 export EDITOR VISUAL
 
-# Pager - less or more
-PAGER=$(/usr/bin/which less)
+# Pager - less > more
+PAGER=$(command -v less)
 if [ -n "${PAGER}" ]; then
     #Less - https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
-    export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
+    #export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
     # or the short version
-    #export LESS='-F -i -J -M -R -W -x4 -X -z-4'
+    export LESS='-F -i -J -M -R -W -x4 -X -z-4'
 
-    export LESSCHARSET="utf-8" # fix man formatting
+    export LESSCHARSET="utf-8" # man formatting
     export LESSHISTFILE="/dev/null" # dont save search history
     #export LC_CTYPE="en_GB.UTF-8"
     #export LC_MESSAGES="en_GB.UTF-8"
     #export LESSCHARSET="en_GB.UTF-8"
 else
-    PAGER=$(/usr/bin/which more)
+    PAGER=$(command -v more)
 fi
 export PAGER
 
@@ -130,16 +133,21 @@ esac
 
 ###############################################################################
 # History
-
-export HISTSIZE=10000              # Num. of commands in history stack in memory
-export HISTFILESIZE=10000
+HISTSIZE=10000              # Num. of commands in history stack in memory
+HISTFILESIZE=10000
 #unset HISTFILESIZE                 # No limit on history file
-export HISTCONTROL=ignoreboth      # bash < 3, omit dups & lines starting with space
-export HISTIGNORE='&:[ ]*:ll:ls:exit' # bash >= 3, omit dups & lines starting with space, and common cmds
-export HISTTIMEFORMAT="%F %T "     # set this to get timings in history !
+HISTCONTROL=ignoreboth      # bash < 3, omit dups & lines starting with space
+HISTIGNORE='&:[ ]*:ll:ls:exit' # bash >= 3, omit dups & lines starting with space, and common cmds
+HISTTIMEFORMAT="%F %T "     # set this to get timings in history !
 shopt -s histappend                # Append rather than overwrite history on exit
-# After each command, save and reload history
-export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
+HISTFILE="${HOME}/.bash_history"  # Set a specific file to store history
+
+# Separate histories in active terminals but all commands as typed
+# (After each command just save history, dont reload it)
+PROMPT_COMMAND="history -a"
+# Shared history across all shell/tmux sessions
+# (After each command, save and reload history)
+#export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 
 
 ###############################################################################
@@ -155,8 +163,11 @@ export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 # Colors
 
 # Set ls colors
-[ -f ~/.dir_colors ] && eval $(dircolors -b ~/.dir_colors) || eval $(dircolors -b)
-
+if [ -f "${HOME}/.dir_colors"  ]; then
+    eval "$(dircolors -b ${HOME}/.dir_colors)"
+else
+    eval "$(dircolors -b)"
+fi
 # Make grep search highlight yellow instead of red
 export GREP_COLOR="1;33"
 
@@ -173,11 +184,13 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 ##############################################################################
 # Source the rest of our config
 
-. ~/configs/common_aliases.sh || printf "Can't source ~/configs/common_aliases.sh\n"
-. ~/configs/functions.sh  && setprompt || printf "Can't source ~/configs/functions.sh\n"
+. "${HOME}/configs/common_aliases.sh" || \
+    printf "Can't source ${HOME}/configs/common_aliases.sh\n"
+. "${HOME}/configs/functions.sh"  && setprompt || \
+    printf "Can't source ${HOME}/configs/functions.sh\n"
 
-# Host specific config - CREATE/USE THIS for local config, keep out of git
-[[ -f ~/.bashrc.$HOSTNAME ]] && . ~/.bashrc.$HOSTNAME
+# Host specific config, keep out of git
+[[ -f "${HOME}/.bashrc.local" ]] && . "${HOME}/.bashrc.local"
 
 
 ##############################################################################
