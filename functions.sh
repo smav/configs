@@ -70,8 +70,6 @@ function parse_git_branch # Git prompt helpers
     if [[ ${GIT_CLEAN} -eq 1 ]]; then
         state="${GGREEN}✔ "
     #else
-    #    #state="${GLRED}±"
-    #    state=" "
     fi
 
     local remote=""
@@ -86,13 +84,13 @@ function parse_git_branch # Git prompt helpers
         remote="${GYELLOW}↕ "
     fi
 
-    #if [[ ${git_status} =~ ${remote_pattern} ]]; then
-    #    if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
-    #        remote="${GYELLOW}↑"
-    #    else
-    #        remote="${GYELLOW}↓"
-    #    fi
-    #fi
+  #  #if [[ ${git_status} =~ ${remote_pattern} ]]; then
+  #  #    if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+  #  #        remote="${GYELLOW}↑"
+  #  #    else
+  #  #        remote="${GYELLOW}↓"
+  #  #    fi
+  #  #fi
 
     local details=""
     if [[ ${GIT_STAGED} -gt 0 ]]; then
@@ -105,7 +103,7 @@ function parse_git_branch # Git prompt helpers
             details="${GNC} | ${details}${GYELLOW}✚ ${GIT_CHANGED}"
         fi
     fi
-    if [[ ${GIT_UNTRACKED} -gt 0 ]]; then
+    if [[ ${GIT_UNTRACKED} == "^" || ${GIT_UNTRACKED} -gt 0 ]]; then
         details="${details}${GRED} …${GIT_UNTRACKED}"
     fi
 
@@ -137,7 +135,8 @@ function virtualenv_info  # get python venv prompt info
         # In case you don't have one activated
         venv=''
     fi
-	[[ -n "$venv" ]] && echo "(venv:$venv)"
+	#[[ -n "$venv" ]] && echo "(venv:$venv)"
+	[[ -n "$venv" ]] && echo "(venv)"
 }
 
 function setprompt        # setup a nicer prompt, color based on hostname
@@ -155,17 +154,17 @@ function setprompt        # setup a nicer prompt, color based on hostname
             UCOLOR=${CYAN}
             LCOLOR=${LCYAN}
             ;;
-        tao|kali)
+        tao|kali|debian*|vm*|*vm)
             COLOR=${YELLOW}
             UCOLOR=${YELLOW}
             LCOLOR=${YELLOW}
             ;;
-        vm*|*vm|diskless|debian*|centos*)
+        diskless|net)
             COLOR=${GREEN}
             UCOLOR=${GREEN}
             LCOLOR=${LGREEN}
             ;;
-        bigjessie)
+        bigjessie|node*|pve*)
             COLOR=${RED}
             UCOLOR=${RED}
             LCOLOR=${LRED}

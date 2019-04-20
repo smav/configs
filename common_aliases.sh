@@ -17,7 +17,7 @@ alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 alias rm='rm -I --preserve-root' #dont prompt if deleting more than 3 files
 
-# Spelling
+# Spelling/ack-grep if available
 if [ -x '/usr/bin/ack-grep' ]; then
 	alias ack-grep='/usr/bin/ack-grep -i --color'
 	alias ack='/usr/bin/ack-grep -i --color'
@@ -33,8 +33,8 @@ else
 fi
 
 # Common
-alias cd..='cd ..'           # common mistype
-alias m='less'
+alias cd..='cd ..'                      # common mistype
+alias m='less'                          # lazy map
 alias p="ps aux | grep -v grep | grep " # eg "p apache"
 
 alias ls='ls --group-directories-first --color=always'
@@ -51,8 +51,8 @@ alias la="ls ${LSOPTS} -A"
 
 # Debian
 if [ -f /etc/debian_version ]; then
-	alias aupdate='sudo apt update'
-	alias aupgrade='sudo apt upgrade'
+	alias aupdate='sudo apt update -o Acquire::http::AllowRedirect=false'
+	alias aupgrade='sudo apt upgrade -o Acquire::http::AllowRedirect=false'
 	alias ainstall='sudo apt install'
 	alias asearch='sudo apt search'
 fi
@@ -73,7 +73,6 @@ alias mountt='mount | column -t'    # nice output for mount command
 alias disks='echo "╓───── m o u n t . p o i n t s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -a; echo ""; echo "╓───── d i s k . u s a g e"; echo "╙────────────────────────────────────── ─ ─ "; df -h;'
 
 # Net
-alias ports='netstat tulpn'
 alias pubip='curl canhazip.com'
 alias header='curl -I' # get web server headers
 alias headerc='curl -I --compress' # does webserver support gzip/mod_deflate
@@ -87,7 +86,7 @@ alias ds='dig +noauthority +noadditional +noqr +nostats +noidentify +nocmd +noqu
 #GW=`route -n | grep ^0.0.0.0 | awk '{print $2}'`
 GW=$(ip route | grep default | cut -f3 -d" ")
 # Common troubleshooting pings
-alias pinggw='ping ${GW}' # ping adsl/isp
+alias pinggw='ping ${GW}'           # ping next hop
 alias ping4='ping 4.2.2.2'
 alias ping8='ping 8.8.8.8'
 alias pingg='ping www.google.com'
@@ -104,11 +103,10 @@ alias iptlistfwd='sudo /sbin/iptables -L FORWARD -n -v --line-numbers'
 
 # Utility
 alias makecert='openssl req -new -x509 -keyout server.pem -out server.pem -days 3650 -nodes'
-#alias mlogs='multitail -cS syslog /var/log/syslog -cS liniptfw /var/log/fw.log'
 
-# Kali
-alias kalivm='virt-viewer --connect qemu:///system 1 &'
+# Kali/HTB
 alias vpn='openvpn --config ~/htb/htb.ovpn'
 alias pyhttp='python -m SimpleHTTPServer 8000'
+alias ipme='sudo dhclient eno1'
 
 ## End of Aliases
