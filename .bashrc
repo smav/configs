@@ -130,7 +130,7 @@ fi
 export PAGER
 
 # Handle custom inputrc
-for file in ~/.inputrc /etc/inputrc; do
+for file in "${HOME}/.inputrc" /etc/inputrc; do
     [ -r "${file}" ] && export INPUTRC="${file}" && break # Use first found
 done
 
@@ -184,8 +184,8 @@ PROMPT_COMMAND="history -a"
 # Colors
 
 # Set ls colors
-if [ -f ~/.dir_colors ]; then
-    eval "$(dircolors -b ~/.dir_colors)"
+if [ -f "${HOME}/.dir_colors" ]; then
+    eval "$(dircolors -b ${HOME}/.dir_colors)"
 else
     eval "$(dircolors -b)"
 fi
@@ -206,9 +206,9 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 # Source the rest of our config
 
 . "${HOME}/configs/common_aliases.sh" || \
-    printf "Can't source ~/configs/common_aliases.sh\n"
+    printf "Can't source ${HOME}/configs/common_aliases.sh\n"
 . "${HOME}/configs/functions.sh"  || \
-    printf "Can't source ~/configs/functions.sh\n"
+    printf "Can't source ${HOME}/configs/functions.sh\n"
 
 # Host specific config, keep out of git
 [[ -f "${HOME}/.bashrc.local" ]] && . "${HOME}/.bashrc.local"
