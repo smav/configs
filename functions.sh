@@ -144,6 +144,9 @@ function setprompt        # setup a nicer prompt, color based on hostname
     USER=`who -m| cut -f1 -d" "| uniq`
     HOST=`hostname -s`
 
+    # added for kali workflow, host_ip display
+    [[ -f ./host_ip ]] && IP=$(cat ./host_ip) && IP="${IP}─"
+
     # Prompt color depends on hostname
     case ${HOST} in
         lupus)
@@ -151,12 +154,12 @@ function setprompt        # setup a nicer prompt, color based on hostname
             UCOLOR=${CYAN}
             LCOLOR=${LCYAN}
             ;;
-        tao|kali)
+        tao|kali|debian*|vm*|*vm)
             COLOR=${YELLOW}
             UCOLOR=${YELLOW}
             LCOLOR=${YELLOW}
             ;;
-        vm*|*vm|diskless|net|web)
+        diskless|net)
             COLOR=${GREEN}
             UCOLOR=${GREEN}
             LCOLOR=${LGREEN}
@@ -193,7 +196,7 @@ function setprompt        # setup a nicer prompt, color based on hostname
 
     PS1="${COLOR}┌\
 ${LCOLOR}(${UCOLOR}\u${GREY}@${COLOR}\h${LCOLOR})${COLOR}\
-${COLOR}─${LCOLOR}(${COLOR}\t${LCOLOR})${COLOR}${NC}\
+${COLOR}─${IP}${LCOLOR}(${COLOR}\t${LCOLOR})${COLOR}${NC}\
 \$(parse_git_branch)\n\
 ${COLOR}└${LCOLOR}(${COLOR}${deb_chroot:+($debian_chroot)}\w${LCOLOR})${COLOR}─${UCOLOR}${WHITE}\$(virtualenv_info)${UCOLOR}\${CHAR}${NC} "
 
