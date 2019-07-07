@@ -53,4 +53,14 @@ $if Bash
 #    # allow the use of the Home/End keys
 #    "\e[1~": beginning-of-line
 #    "\e[4~": end-of-line
+
+	# Fix ctrl-l in vi mode
+    $if mode=vi
+		set keymap vi-command
+		# vi-command mode
+		Control-l: clear-screen
+		set keymap vi-insert
+		# vi-insert mode
+		Control-l: clear-screen 
+	$endif
 $endif

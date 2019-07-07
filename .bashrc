@@ -13,10 +13,9 @@
 #                                   ---> ~/configs/common_aliases.sh
 #                                   ---> ~/configs/functions.sh
 #
-# We also source config from ~/.bashrc.$HOSTNAME if it exists,
+# We also source config from ~/.bashrc.local if it exists,
 # CREATE IT to store local config/aliases (keep it out of git).
 #
-# e.g $ touch .bashrc.kali # then add local config there
 #
 # ----
 # 
@@ -68,8 +67,8 @@ ulimit -S -c 0 > /dev/null 2>&1    # No core files by default. See /etc/security
 shopt -u mailwarn
 unset MAILCHECK                    # dont want shell to warn of incoming mail
 
-# Bash VI mode, use VI keybinds for shell movement, standard keybindings are
-# EMACS-like, ie ctrl-a ctrl-e
+# Bash VI mode, use VI keybinds for shell movement, 
+# the standard keybindings are EMACS-like, ie ctrl-a ctrl-e
 set -o vi
 
 
@@ -89,10 +88,9 @@ export PATH
 
 ###############################################################################
 # Default bit-mask
-
 umask 0022
 # Stricter perms for root
-if $(whoami | grep -q root) ; then
+if [ "${USER}" == "root" ] ; then
     umask 0077
 fi
 
@@ -113,15 +111,15 @@ EDITOR=${VIM_PATH}
 VISUAL=${VIM_PATH}
 export EDITOR VISUAL
 
-# Pager - less or more
+# Pager - less > more
 PAGER=$(command -v less)
 if [ -n "${PAGER}" ]; then
     #Less - https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
-    export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
+    #export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4'
     # or the short version
-    #export LESS='-F -i -J -M -R -W -x4 -X -z-4'
+    export LESS='-F -i -J -M -R -W -x4 -X -z-4'
 
-    export LESSCHARSET="utf-8" # fix man formatting
+    export LESSCHARSET="utf-8" # man formatting
     export LESSHISTFILE="/dev/null" # dont save search history
     #export LC_CTYPE="en_GB.UTF-8"
     #export LC_MESSAGES="en_GB.UTF-8"
@@ -132,7 +130,7 @@ fi
 export PAGER
 
 # Handle custom inputrc
-for file in ~/.inputrc /etc/inputrc; do
+for file in "${HOME}/.inputrc" /etc/inputrc; do
     [ -r "${file}" ] && export INPUTRC="${file}" && break # Use first found
 done
 
@@ -144,33 +142,22 @@ esac
 
 
 ###############################################################################
-# History FIXME
-
-export HISTSIZE=10000              # Num. of commands in history stack in memory
-export HISTFILESIZE=10000
+# History
+HISTSIZE=10000              # Num. of commands in history stack in memory
+HISTFILESIZE=10000
 #unset HISTFILESIZE                 # No limit on history file
-export HISTCONTROL=ignoreboth      # bash < 3, omit dups & lines starting with space
-export HISTIGNORE='&:[ ]*:ll:ls:exit' # bash >= 3, omit dups & lines starting with space, and common cmds
-export HISTTIMEFORMAT="%F %T "     # set this to get timings in history !
+HISTCONTROL=ignoreboth      # bash < 3, omit dups & lines starting with space
+HISTIGNORE='&:[ ]*:ll:ls:exit' # bash >= 3, omit dups & lines starting with space, and common cmds
+HISTTIMEFORMAT="%F %T "     # set this to get timings in history !
 shopt -s histappend                # Append rather than overwrite history on exit
+HISTFILE="${HOME}/.bash_history"  # Set a specific file to store history
 
-# There are 2 options for shell history, per session/shell or across all sessions
-# uncomment only one of the following options (hence comment the other!)
-#
-# 1. Individual shell historys that are removed on shell exit
-#export HISTFILE="~/.bash_history.$$"  # Set a specific file to store history
-#trap "[[ -f ${HISTFILE} ]] && rm ${HISTFILE}" EXIT            # remove the file on exit
-# to save history just dump it before exit : history > a_file
-#
-# Or
-#
-# 2. Shared history across all shell/tmux sessions, stored in .bash_history
-# export HISTFILE="~/.bash_history"  # Set a specific file to store history
-
-# After each command, save and reload history
-export HISTFILE="${HOME}/.bash_history"  # Set a specific file to store history
-#export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE; $PROMPT_COMMAND"
-export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
+# Separate historys in active terminals but all commands as typed
+# (After each command just save history, dont reload it)
+PROMPT_COMMAND="history -a"
+# Shared history across all shell/tmux sessions
+# (After each command, save and reload history)
+#export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 
 
 ###############################################################################
@@ -197,8 +184,8 @@ export PROMPT_COMMAND="history -a $HISTFILE; history -c; history -r $HISTFILE"
 # Colors
 
 # Set ls colors
-if [ -f ~/.dir_colors ]; then
-    eval "$(dircolors -b ~/.dir_colors)"
+if [ -f "${HOME}/.dir_colors" ]; then
+    eval "$(dircolors -b ${HOME}/.dir_colors)"
 else
     eval "$(dircolors -b)"
 fi
@@ -219,12 +206,12 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 # Source the rest of our config
 
 . "${HOME}/configs/common_aliases.sh" || \
-    printf "Can't source ~/configs/common_aliases.sh\n"
+    printf "Can't source ${HOME}/configs/common_aliases.sh\n"
 . "${HOME}/configs/functions.sh"  || \
-    printf "Can't source ~/configs/functions.sh\n"
+    printf "Can't source ${HOME}/configs/functions.sh\n"
 
-# Host specific config - CREATE/USE THIS for local config, keep out of git
-[[ -f "${HOME}/.bashrc.${HOSTNAME}" ]] && . "${HOME}/.bashrc.${HOSTNAME}"
+# Host specific config, keep out of git
+[[ -f "${HOME}/.bashrc.local" ]] && . "${HOME}/.bashrc.local"
 
 
 ##############################################################################
@@ -237,7 +224,7 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 # Store ssh-agent output/config somewhere
 AGENT_ENV="${HOME}/.ssh/.env"
 
-function start_agent {
+start_agent() {
     # Start the agent and store it's details
     /usr/bin/ssh-agent | sed '/^echo/d' > "${AGENT_ENV}" && chmod 600 "${AGENT_ENV}"
     # Source it/make it active (ie nuke any old config)
@@ -246,26 +233,28 @@ function start_agent {
     /usr/bin/ssh-add;
 }
 
-# Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
-if [ -n "${SSH_AUTH_SOCK}" ]; then
-    # sudo can inherit other users auth_sock so.. check for this
-    # (this check may be debian specific)
-    if [ $(echo "${SSH_AUTH_SOCK}" | cut -d/ -f4) == "${EUID}" ]; then
-        # The socket exists, but if the PID isn't running then it may be old
-        # config, so start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
-    fi
-else
-    # No agent running, is there a config to use?
-    if [ -f "${AGENT_ENV}" ]; then
-        . "${AGENT_ENV}" > /dev/null
-        # Is this a current agent, ie still running? If not, start a new one/nuke it
-        ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
+if [ -f "${AGENT_ENV}" ]; then
+    # Is the ssh-agent setup, ie did we inherit one? (from Tmux/DisplayMgr/etc)
+    if [ -n "${SSH_AUTH_SOCK}" ]; then
+        # sudo can inherit other users auth_sock so.. check for this
+        # (this check may be debian specific)
+        if [ $(echo "${SSH_AUTH_SOCK}" | cut -d/ -f4) == "${EUID}" ]; then
+            # The socket exists, but if the PID isn't running then it may be old
+            # config, so start a new one/nuke it
+            ps aux | grep ${SSH_AGENT_PID} 2>&1 | grep [s]sh-agent > /dev/null || start_agent
+        fi
     else
-        # No agent running and no config to use, start the agent
-        # (unless user is root, more caution is required for root)
-        if [ "${EUID}" -ne 0 ]; then
-            start_agent
+        # No agent running, is there a config to use?
+        if [ -f "${AGENT_ENV}" ]; then
+            . "${AGENT_ENV}" > /dev/null
+            # Is this a current agent, ie still running? If not, start a new one/nuke it
+            ps aux | grep ${SSH_AGENT_PID} | grep [s]sh-agent > /dev/null || start_agent
+        else
+            # No agent running and no config to use, start the agent
+            # (unless user is root, more caution is required for root)
+            if [ "${EUID}" -ne 0 ]; then
+                start_agent
+            fi
         fi
     fi
 fi
