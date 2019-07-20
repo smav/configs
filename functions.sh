@@ -154,7 +154,7 @@ function setprompt        # setup a nicer prompt, color based on hostname
             UCOLOR=${CYAN}
             LCOLOR=${LCYAN}
             ;;
-        tao|kali|debian*|vm*|*vm)
+        tao|kali|debian*|buster*|vm*|*vm)
             COLOR=${YELLOW}
             UCOLOR=${YELLOW}
             LCOLOR=${YELLOW}

@@ -45,7 +45,7 @@ if [ -d "${CFG_DIR}" ]; then
             printf "Linking... %s\n" "${target}"
             ln -s "${vimdir}/${file}" "${target}"
         else
-            printf "Linking... %s\n" "${target}\n"
+            printf "Linking... %s\n" "${target}"
             ln -s "${vimdir}/${file}" "${target}"
         fi
     fi

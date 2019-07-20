@@ -35,7 +35,7 @@ else
     case ${HOSTNAME} in
         lupus)
         /usr/bin/tmux -2 -u new-session -d -n ${WIN1_NAME} -s ${SESSION} '/usr/bin/sudo /usr/bin/tail -F /var/log/syslog | /usr/bin/ccze' \; \
-         split-window -d -t "${SESSION}:${WIN1_NAME}" '/usr/bin/sudo /usr/sbin/iftop -nNB'\; \
+         split-window -d -t "${SESSION}:${WIN1_NAME}" '/usr/bin/sudo /usr/sbin/iftop -nNB -i eth1'\; \
          new-window -t ${SESSION} \; attach
         ;;
     esac
