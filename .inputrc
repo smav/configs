@@ -50,9 +50,9 @@ $if Bash
     "\e[B": history-search-forward
     "\e[C": forward-char
     "\e[D": backward-char
-#    # allow the use of the Home/End keys
-#    "\e[1~": beginning-of-line
-#    "\e[4~": end-of-line
+    # allow the use of the Home/End keys
+    "\e[1~": beginning-of-line
+    "\e[4~": end-of-line
 
 	# Fix ctrl-l in vi mode
     $if mode=vi
