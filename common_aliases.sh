@@ -51,8 +51,8 @@ alias la="ls ${LSOPTS} -A"
 
 # Debian
 if [ -f /etc/debian_version ]; then
-	alias aupdate='sudo apt update -o Acquire::http::AllowRedirect=false'
-	alias aupgrade='sudo apt upgrade -o Acquire::http::AllowRedirect=false'
+	alias aupdate='sudo apt update'
+	alias aupgrade='sudo apt upgrade'
 	alias ainstall='sudo apt install'
 	alias asearch='sudo apt search'
 fi
@@ -90,6 +90,9 @@ alias pinggw='ping ${GW}'           # ping next hop
 alias ping4='ping 4.2.2.2'
 alias ping8='ping 8.8.8.8'
 alias pingg='ping www.google.com'
+# iproute2
+alias ipa="ip -color=auto a"
+alias ips="ip -color=auto -br a"
 
 # iptables
 alias ipt='sudo /sbin/iptables'
@@ -107,6 +110,5 @@ alias makecert='openssl req -new -x509 -keyout server.pem -out server.pem -days 
 # Kali/HTB
 alias vpn='openvpn --config ~/htb/htb.ovpn'
 alias pyhttp='python -m SimpleHTTPServer 8000'
-alias ipme='sudo dhclient eno1'
 
 ## End of Aliases
