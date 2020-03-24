@@ -149,7 +149,7 @@ function setprompt        # setup a nicer prompt, color based on hostname
 
     # Prompt color depends on hostname
     case ${HOST} in
-        lupus)
+        lupus|gw|dc|www|filer)
             COLOR=${CYAN}
             UCOLOR=${CYAN}
             LCOLOR=${LCYAN}
@@ -159,12 +159,12 @@ function setprompt        # setup a nicer prompt, color based on hostname
             UCOLOR=${YELLOW}
             LCOLOR=${YELLOW}
             ;;
-        diskless|net|debian*|vm*|*vm)
+        diskless|vm*|*vm)
             COLOR=${GREEN}
             UCOLOR=${GREEN}
             LCOLOR=${LGREEN}
             ;;
-        bigjessie|node*|pve*)
+        bigjessie|prot)
             COLOR=${RED}
             UCOLOR=${RED}
             LCOLOR=${LRED}
