@@ -5,7 +5,7 @@
 ###############################################################################
 
 # To re-read (and implement changes to this file) use:
-# bind -f configs/.inputrc
+# bind -f .dotfiles/.inputrc
 
 # First, include any systemwide bindings and variable
 # assignments from /etc/inputrc (fails silently if file doesn't exist)

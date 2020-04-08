@@ -23,7 +23,7 @@ if [ ! -z "${1}" ]; then
 	echo "{+} dumping xml.."
 	sudo virsh dumpxml centos7prep > /tmp/centos-base-vm.xml
 	echo "{+} modifying xml.."
-	sudo python ~/configs/bin/modify-domain.py \
+	sudo python ~/.dotfiles/bin/modify-domain.py \
 		--name ${VM} \
 		--new-uuid \
 		--device-path=/dev/${VG}/${VM} \

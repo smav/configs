@@ -8,10 +8,10 @@
 #
 #  The actual ~/.bashrc should be a link to a git local repository,
 #  it depends on other files in the repository.
-#  i.e.             ~/.bashrc       ---> ~/configs/.bashrc
-#                   ~/.bash_profile ---> ~/configs/.bash_profile
-#                                   ---> ~/configs/common_aliases.sh
-#                                   ---> ~/configs/functions.sh
+#  i.e.             ~/.bashrc       ---> ~/.dotfiles/.bashrc
+#                   ~/.bash_profile ---> ~/.dotfiles/.bash_profile
+#                                   ---> ~/.dotfiles/common_aliases.sh
+#                                   ---> ~/.dotfiles/functions.sh
 #
 # We also source config from ~/.bashrc.local if it exists,
 # CREATE IT to store local config/aliases (keep it out of git).
@@ -76,7 +76,7 @@ set -o vi
 # PATH, MANPATH & Host specific vars
 
 BASE_PATH="/usr/sbin:/usr/local/bin:/usr/bin:/sbin:/bin"
-PATH="${HOME}/configs/bin:${BASE_PATH}"
+PATH="${HOME}/.dotfiles/bin:${BASE_PATH}"
 export PATH
 #export CDPATH='.:..:../..:~/:/etc' # Similar to $PATH, but for use by 'cd'
 # Note that the '.' in $CDPATH is needed so that cd will work under POSIX mode
@@ -205,10 +205,10 @@ export LESS_TERMCAP_us=$'\E[01;33m'    # begin underline
 ##############################################################################
 # Source the rest of our config
 
-. "${HOME}/configs/common_aliases.sh" || \
-    printf "Can't source ${HOME}/configs/common_aliases.sh\n"
-. "${HOME}/configs/functions.sh"  || \
-    printf "Can't source ${HOME}/configs/functions.sh\n"
+. "${HOME}/.dotfiles/common_aliases.sh" || \
+    printf "Can't source ${HOME}/.dotfiles/common_aliases.sh\n"
+. "${HOME}/.dotfiles/functions.sh"  || \
+    printf "Can't source ${HOME}/.dotfiles/functions.sh\n"
 
 # Host specific config, keep out of git
 [[ -f "${HOME}/.bashrc.local" ]] && . "${HOME}/.bashrc.local"
@@ -277,8 +277,8 @@ fi
 ##############################################################################
 # End
 
-# Setprompt from ~/configs/functions.sh
+# Setprompt from ~/.dotfiles/functions.sh
 setprompt
 
-################# End of ~/.bashrc (~/configs/.bashrc)  ######################
+################# End of ~/.bashrc (~/.dotfiles/.bashrc)  ######################
 ##############################################################################

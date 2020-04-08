@@ -49,7 +49,7 @@ function parse_git_branch # Git prompt helpers
     # NEW - more advanced git status
     # from https://github.com/magicmonty/bash-git-prompt
     local -a git_status_fields
-    git_status_fields=( $(~/configs/bin/git_status.sh 2>/dev/null) )
+    git_status_fields=( $(~/.dotfiles/bin/git_status.sh 2>/dev/null) )
     local GIT_BRANCH=${git_status_fields[0]}
     local GIT_REMOTE=${git_status_fields[1]}
     local GIT_UPSTREAM=${git_status_fields[2]}
@@ -290,7 +290,7 @@ function myps             # list all current user's processes
 { ps $@ -u $USER -o pid,%cpu,%mem,bsdtime,command ; }
 
 function lsfunc           # list all functions in this file
-{ grep ^function ~/configs/functions.sh | cut -c9- ; }
+{ grep ^function ~/.dotfiles/functions.sh | cut -c9- ; }
 
 function calc             # Trivial command line calculator
 {

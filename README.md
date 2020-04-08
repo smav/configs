@@ -4,9 +4,9 @@ Configs
 Configuration files for vim, tmux, bash, etc.
 
 > cd  
-> git clone https://github.com/smav/configs configs  
+> git clone https://github.com/smav/configs .dotfiles
 > git clone https://github.com/smav/.vim .vim  
-> ~/configs/bin/gitlinks.sh                  # start using the configs  
+> ~/.dotfiles/bin/gitlinks.sh                  # start using the configs  
 
 The gitlinks script will backup and replace(with links) the current configs.  
 

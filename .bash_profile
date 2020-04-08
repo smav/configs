@@ -43,7 +43,7 @@ case $- in
 		# Work from Main tmux session, or create one
         case ${HOSTNAME} in
             lupus)
-                ~/configs/bin/tmux_login.sh
+                ~/.dotfiles/bin/tmux_login.sh
                 ;;
         esac
     ;;
