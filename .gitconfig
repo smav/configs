@@ -1,6 +1,6 @@
 [user]
-	name = 
-	email = 
+    name =
+    email =
     editor = vim
     #signingkey = ???
     whitespace = trailing-space,space-before-tab,indent-with-non-tab,cr-at-eol
@@ -8,13 +8,13 @@
 [core]
 #   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 #   -x4 = tabs are 4 spaces -r wrap long lines
-	;pager = less -x5,9 -r
+    ;pager = less -x5,9 -r
 
 [push]
     default = current
 
 [diff]
-	tool = vimdiff
+    tool = vimdiff
     renames = true
 
 #[merge]
@@ -59,10 +59,10 @@
     co = checkout
     ci = commit
     br = branch
-	dw = diff --color-words
+    dw = diff --color-words
     dc = diff --cached
-	#lg = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
-	lg = log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    #lg = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
+    lg = log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
     lol = log --graph --decorate --pretty=oneline --abbrev-commit --date=relative
     ls = ls-files
 
