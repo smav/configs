@@ -4,7 +4,7 @@
 # useful for quick box setup
 
 # Dir we cloned configs to
-CFG_DIR="${HOME}/configs"
+CFG_DIR="${HOME}/.dotfiles"
 # List of files/dirs to link to (only top level of config can be linked this way)
 LIST=".bashrc .bash_profile .tmux.conf .inputrc" # .fluxbox .irssi"
 
