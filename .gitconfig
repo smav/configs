@@ -65,8 +65,8 @@
     dw = diff --color-words
     dc = diff --cached
     #lg = !"git log --graph --decorate --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative | head -n 29 && echo "
-    lg = log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-    lol = log -n 20 --graph --decorate --pretty=oneline --abbrev-commit --date=relative
+    lg = log -n 20 --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit --date=relative
     ls = ls-files
 
     # Show files ignored by git:
