@@ -91,8 +91,8 @@ alias ping4='ping 4.2.2.2'
 alias ping8='ping 8.8.8.8'
 alias pingg='ping www.google.com'
 # iproute2
-alias ipa="ip -color=auto a"
-alias ips="ip -color=auto -br a"
+alias ipa="ip -c -br a"
+alias ipr="ip -c r"
 
 # iptables
 alias ipt='sudo /sbin/iptables'
