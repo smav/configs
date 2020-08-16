@@ -36,6 +36,7 @@ fi
 alias cd..='cd ..'                      # common mistype
 alias m='less'                          # lazy map
 alias p="ps aux | grep -v grep | grep " # eg "p apache"
+alias dfh='df -x tmpfs -x squashfs -x devtmpfs -h'
 
 alias ls='ls --group-directories-first --color=always'
 LSOPTS='-lhF --group-directories-first --color=always' # long format, human readablea, add indicators
@@ -44,8 +45,8 @@ alias la="ls ${LSOPTS} -A"
 # alias lk="ls ${LSOPTS} -ASr" # sort by size
 # alias lc="ls ${LSOPTS} -Acr" # sort by change time
 # alias lu="ls ${LSOPTS} -Aur" # sort by access time
-# alias lt="ls ${LSOPTS} -At"  # sort by date
-# alias ltr="ls ${LSOPTS} -Atr" # sort by date reversed
+alias lt="ls ${LSOPTS} -At"  # sort by date
+alias ltr="ls ${LSOPTS} -Atr" # sort by date reversed
 
 [[ -x /usr/bin/tree ]] && alias tree='tree -C --charset utf-8 --dirsfirst'
 
