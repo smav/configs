@@ -37,11 +37,9 @@
 
 
 ###############################################################################
-# Sanity check
-
-# If not running interactively bail out.
-[ -z "$PS1" ] && return
 # Sanity check to avoid the 'generate no output' warning above about scp etc
+# If not running interactively bail out
+[ -z "$PS1" ] && return
 
 ###############################################################################
 # Bash configuration options
